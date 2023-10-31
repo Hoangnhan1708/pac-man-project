@@ -39,6 +39,8 @@ def extractLocation(nameFile): # return tuple
     y = int(last_line_vals[1])
     location = (x,y)
     return location
+
+# def render(matrix):
     
 
  
