@@ -40,7 +40,7 @@ def extractLocation(nameFile): # return tuple
     location = (x,y)
     return location
 
-# def render(matrix):
+
     
 
  
