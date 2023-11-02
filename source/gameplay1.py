@@ -9,7 +9,7 @@ def get_neighbors(matrix, node):
     neighbors = []
     for i, j in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
         if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and matrix[node[0] + i][node[1] + j] != 1 :
-                neighbors.append((node[0] + i, node[1] + j))
+            neighbors.append((node[0] + i, node[1] + j))
                 
     return neighbors
 
@@ -20,7 +20,7 @@ def astar(matrix, start, goal):
     heapq.heappush(open_set, (0, start))
     came_from = {start: None}
     g_score = {start: 0}
-   
+    pathAlter =[]
     while open_set:
         current = heapq.heappop(open_set)[1] 
         if current == goal:
@@ -30,7 +30,8 @@ def astar(matrix, start, goal):
                 current = came_from[current]
             path.reverse()
             return path
-        
+        # else:
+        #     pathAlter.append(current)
         for neighbor in get_neighbors(matrix, current):
             temp_g = g_score[current] + 1
             if neighbor not in g_score or temp_g < g_score[neighbor]:
@@ -65,11 +66,23 @@ def find_path_to_nearest_food(matrix, pacman_position):
 # Update Pacman's position based on the path found by A*
 def update_pacman_position(matrix, pacman_position):
     path = find_path_to_nearest_food(matrix, pacman_position)
-    # print(path)
+    foodPosition = None
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 2:
+                foodPosition = (i,j)
     if path:
         next_position = path[1]  # Lấy vị trí thứ hai trong danh sách đường đi
-        matrix[pacman_position[0]][pacman_position[1]] = 0  # Xóa vị trí hiện tại của Pacman
-        matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
-        return next_position
+        if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
+            # Kết thúc trò chơi ở đây
+            print("Game Over")
+            return False
+        else:
+            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+            if (next_position[0],next_position[1]) == foodPosition :
+                print("You Win")
+                # return False
+            return next_position
     return pacman_position
 

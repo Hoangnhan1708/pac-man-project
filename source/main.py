@@ -24,7 +24,8 @@ heightTile = ((HEIGHT - 50) //rows) # height of each piece
 
 playerLocation = logic.extractLocation('map1.txt')
 playerX = playerLocation[0] 
-playerY = playerLocation[1] 
+playerY = playerLocation[1]
+initalLocation = (playerX,playerY) 
 matrix[playerX][playerY] = 4
 direction = 0
 counter = 0
@@ -49,19 +50,22 @@ def showScore(x,y):
 def render(matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            if matrix[i][j] == 1:
+            if matrix[i][j] == 1: # Wall
                 pygame.draw.rect(screen, colorWall, pygame.Rect(j* widthTile + (0.3 * widthTile) , i * heightTile + (0.3 * heightTile) , widthTile, heightTile))
                 
-            if matrix[i][j] == 2:
+            if matrix[i][j] == 2: # Food
                 # pygame.draw.circle(screen,colorFood, (j* widthTile + (0.3 * widthTile), i * heightTile + (0.3 * heightTile)) ,5)
                 screen.blit(foodImage, (j* widthTile + (0.3 * widthTile), i* heightTile + (0.3 * heightTile)))
                 
             
-            if matrix[i][j] == 3:
+            if matrix[i][j] == 3: # Monster
                 screen.blit(monsterImage, (j* widthTile + (0.3 * widthTile), i* heightTile + (0.3 * heightTile)))
             
-            if matrix[i][j] == 4:
+            if matrix[i][j] == 4: # Pacman
                 screen.blit(playerImages[counter // 5], (j* widthTile + (0.3 * widthTile), i* heightTile + (0.3 * heightTile)))
+            
+            if matrix[i][j] == 5: # Location which pacman gone
+                pygame.draw.circle(screen, 'white', (j* widthTile + (0.7 * widthTile)  , i * heightTile + (0.7 * heightTile) ) , 5)
 
 
 
@@ -73,9 +77,14 @@ while run:
     else:
         counter = 0
     screen.fill('black')
-    playerX, playerY = gameplay2.update_pacman_position(matrix, (playerX, playerY))
-    # playerX, playerY = gameplay1.update_pacman_position(matrix, (playerX, playerY))
-    matrix[playerX][playerY] = 4
+    
+    if gameplay2.update_pacman_position(matrix, (playerX, playerY)):
+        playerX, playerY = gameplay2.update_pacman_position(matrix, (playerX, playerY))
+        # playerX, playerY = gameplay1.update_pacman_position(matrix, (playerX, playerY))
+    else:
+        run = False
+        
+    
     render(matrix)
     showScore(300,700)
 
