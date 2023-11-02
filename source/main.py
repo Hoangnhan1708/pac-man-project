@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-import logic
+import extract
 import gameplay1 
 import gameplay2 
 pygame.init()
@@ -14,14 +14,14 @@ font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
 color_food = 'red'
-matrix = logic.extractMatrix('map1.txt')
-# matrix = logic.extractMatrix('map2.txt')
+matrix = extract.extractMatrix('map1.txt')
+# matrix = extract.extractMatrix('map2.txt')
 
 rows, cols = len(matrix), len(matrix[0])
 width_tile = (WIDTH//cols) # width of each piece
 height_tile = ((HEIGHT - 50) //rows) # height of each piece
 
-player_location = logic.extractLocation('map1.txt')
+player_location = extract.extractLocation('map1.txt')
 player_x = player_location[0] 
 player_y = player_location[1]
 
@@ -64,7 +64,6 @@ def render(matrix):
             
             if matrix[i][j] == 5: # Location which pacman gone
                 pygame.draw.circle(screen, 'white', (j* width_tile + (0.7 * width_tile)  , i * height_tile + (0.7 * height_tile) ) , 5)
-
 
 
 run = True
