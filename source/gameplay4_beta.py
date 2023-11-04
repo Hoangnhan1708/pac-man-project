@@ -1,5 +1,6 @@
 import pygame
 import heapq
+import time
 # Heuristic function (h(x): estimated distance from processing location to goal)
 def heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -98,24 +99,24 @@ def astar_multi_goal(matrix, start, goals):
 # Find nearest available food
 
 
-def find_path_to_food(matrix, pacman_position, multipleFood=False, isPacmanFood=False):
-    food_position = None
+def find_path_to_food(matrix, pacman_position, isPacmanFood=False):
+    foods_position = []
     if is_more_food(matrix):
         if isPacmanFood == False:
-            if multipleFood==False:
-                for i in range(len(matrix)):
-                    for j in range(len(matrix[0])):
-                        if matrix[i][j] == 2:
-                            food_position = (i,j)
+            for i in range(len(matrix)):
+                for j in range(len(matrix[0])):
+                    if matrix[i][j] == 2:
+                        foods_position.append((i,j))
         else:
             for i in range(len(matrix)):
                     for j in range(len(matrix[0])):
                         if matrix[i][j] == 4:
                             food_position = (i,j)
-        if food_position is None:
+                            break
+        if len(foods_position) ==0:
             return None
 
-        return astar(matrix, pacman_position, food_position)
+        return astar_multi_goal(matrix, pacman_position, foods_position)
     else:
         return False
         
@@ -188,6 +189,7 @@ def update_monster_position(matrix, monster_postion):
     matrix[next_position[0]][next_position[1]] = 3
 
     if (next_position[0], next_position[1]) == food_position:
+        time.sleep(15)
         print("Game Over")
         return False
     return next_position

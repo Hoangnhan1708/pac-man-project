@@ -16,7 +16,7 @@ color_wall = 'blue'
 color_monster = 'white'
 color_food = 'red'
 # matrix = extract.extractMatrix('map1.txt')
-matrix = extract.extractMatrix('map2.txt')
+matrix = extract.extractMatrix('map4.txt')
 
 rows, cols = len(matrix), len(matrix[0])
 width_tile = (WIDTH//cols) # width of each piece
