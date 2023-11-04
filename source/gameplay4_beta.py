@@ -71,6 +71,30 @@ def astar_monster(matrix, start, goal):
      
     return None
 
+def astar_multi_goal(matrix, start, goals):
+    open_set = []
+    heapq.heappush(open_set, (0, start))
+    came_from = {start: None}
+    g_score = {start: 0}
+    while open_set:
+        current = heapq.heappop(open_set)[1]
+        if current in goals:
+            path = []
+            while current in came_from:
+                path.append(current)
+                current = came_from[current]
+            path.reverse()
+            return path
+
+        for neighbor in get_neighbors(matrix, current):
+            temp_g = g_score[current] + 1
+            if neighbor not in g_score or temp_g < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = temp_g
+                f_score = temp_g + min(heuristic(neighbor, goal) for goal in goals)
+                heapq.heappush(open_set, (f_score, neighbor))
+    return None
+
 # Find nearest available food
 
 
@@ -146,7 +170,7 @@ def update_pacman_position(matrix, pacman_position):
     else:
         return False
 
-def update_monster_position (matrix, monster_postion):
+def update_monster_position(matrix, monster_postion):
     # path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
     food_position = None
 

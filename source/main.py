@@ -38,10 +38,11 @@ player_images=[]
 monster_images =[]
 for i in range(1,5):
     player_images.append(pygame.transform.scale(pygame.image.load(f'source/assets/player_images/{i}.png'),(20,20)))
-    
+
 for i in range(1,5):
     monster_images.append(pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/{i}.png'),(20,20)))
 
+# monster_image =pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/blue.png'),(20,20))
 
 food_image = pygame.transform.scale(pygame.image.load(f'source/assets/food_image/apple.png'),(25,25))
 
@@ -61,7 +62,7 @@ def render(matrix):
                 
             
             if matrix[i][j] == 3: # Monster
-                screen.blit(monster_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
+                screen.blit(monster_images[counter //5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
             if matrix[i][j] == 4: # Pacman
                 screen.blit(player_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
