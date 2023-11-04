@@ -133,7 +133,7 @@ def update_pacman_position(matrix, pacman_position):
         return next_position
 
 def update_monster_position (matrix, monster_postion):
-    path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
+    # path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
     food_position = None
 
     for i in range(len(matrix)):
@@ -149,15 +149,17 @@ def update_monster_position (matrix, monster_postion):
     # Update the next postion
     matrix[next_position[0]][next_position[1]] = 3
 
-    if (next_position[0], next_position[1]) == set(food_position):
+    if (next_position[0], next_position[1]) == food_position:
         print("Game Over")
         return False
     return next_position
 
 
 def update_monsters_postion (matrix):
+    monsters_position = []
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
             if matrix[i][j] == 3:
-                monster_position = (i,j)
-                update_monster_position(matrix, monster_position)
+                monsters_position.append((i,j))
+    for monster_position in monsters_position:
+        update_monster_position(matrix, monster_position)
