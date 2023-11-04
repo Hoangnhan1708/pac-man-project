@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 import extract
 import gameplay1 
-import gameplay2
+import gameplay2 
 import gameplay4_beta
  
 pygame.init()
@@ -11,7 +11,7 @@ WIDTH = 700 # width of console
 HEIGHT = 750 # height of console
 screen = pygame.display.set_mode([WIDTH,HEIGHT])
 timer = pygame.time.Clock()
-fps = 10
+fps = 5
 font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
@@ -37,10 +37,14 @@ score_value = 100
 
 # Get image 
 player_images=[]
+monsters_image=[]
 for i in range(1,5):
     player_images.append(pygame.transform.scale(pygame.image.load(f'source/assets/player_images/{i}.png'),(20,20)))
+    
+for i in range(1,5):
+    monsters_image.append(pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/{i}.png'),(20,20)))
 
-monster_image =pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/blue.png'),(20,20))
+
 
 food_image = pygame.transform.scale(pygame.image.load(f'source/assets/food_image/apple.png'),(25,25))
 
@@ -60,7 +64,7 @@ def render(matrix):
                 
             
             if matrix[i][j] == 3: # Monster
-                screen.blit(monster_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
+                screen.blit(monsters_image[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
             if matrix[i][j] == 4: # Pacman
                 screen.blit(player_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
@@ -78,10 +82,11 @@ while run:
         counter = 0
     screen.fill('black')
     
-    if gameplay2.update_pacman_position(matrix, (player_x, player_y)):
+    if gameplay4_beta.update_pacman_position(matrix, (player_x, player_y)):
+        player_x, player_y = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
+        gameplay4_beta.update_monsters_postion(matrix)
         # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
         # player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
-        player_x, player_y = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
         score_value -= 1
         if score_value == 0:
             run = False

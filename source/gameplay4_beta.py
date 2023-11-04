@@ -93,6 +93,7 @@ def find_path_to_food(matrix, pacman_position, multipleFood=False, isPacmanFood=
     return astar(matrix, pacman_position, food_position)
 
 
+
 # Update Pacman's position based on the path found by A*
 def update_pacman_position(matrix, pacman_position):
     path_to_food = find_path_to_food(matrix, pacman_position)
@@ -132,4 +133,13 @@ def update_pacman_position(matrix, pacman_position):
         return next_position
 
 def update_monster_position (matrix, monster_postion):
+    path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
+    food_position = None
 
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 4:
+                food_position = (i, j)
+
+    path_to_monster = astar_monster(matrix, monster_postion, food_position)
+    next_position = path_to_monster[1] if path_to_monster else monster_postion
