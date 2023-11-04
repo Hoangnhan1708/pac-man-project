@@ -14,8 +14,8 @@ font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
 color_food = 'red'
-matrix = extract.extractMatrix('map1.txt')
-# matrix = extract.extractMatrix('map2.txt')
+# matrix = extract.extractMatrix('map1.txt')
+matrix = extract.extractMatrix('map2.txt')
 
 rows, cols = len(matrix), len(matrix[0])
 width_tile = (WIDTH//cols) # width of each piece
@@ -76,8 +76,8 @@ while run:
     screen.fill('black')
     
     if gameplay2.update_pacman_position(matrix, (player_x, player_y)):
-        # player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
-        player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
+        player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
+        # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
         score_value -= 1
         if score_value == 0:
             run = False
