@@ -3,13 +3,14 @@ import numpy as np
 import extract
 import gameplay1 
 import gameplay2 
+import gameplay4_beta
 pygame.init()
 pygame.font.init()
 WIDTH = 700 # width of console
 HEIGHT = 750 # height of console
 screen = pygame.display.set_mode([WIDTH,HEIGHT])
 timer = pygame.time.Clock()
-fps = 10
+fps = 1
 font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
@@ -75,8 +76,9 @@ while run:
         counter = 0
     screen.fill('black')
     
-    if gameplay2.update_pacman_position(matrix, (player_x, player_y)):
-        player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
+    if gameplay4_beta.update_pacman_position(matrix, (player_x, player_y)):
+        player_x, player_y = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
+        gameplay4_beta.update_monsters_postion(matrix)
         # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
         score_value -= 1
         if score_value == 0:
