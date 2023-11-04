@@ -170,9 +170,10 @@ def update_monster_position (matrix, monster_postion):
 
 
 def update_monsters_postion (matrix):
+    monsters_position = []
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
             if matrix[i][j] == 3:
-                monster_position = (i,j)
-                update_monster_position(matrix, monster_position)
-
+                monsters_position.append((i,j))
+    for monster_position in monsters_position:
+        update_monster_position(matrix, monster_position)
