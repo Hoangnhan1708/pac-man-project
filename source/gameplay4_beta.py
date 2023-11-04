@@ -76,64 +76,78 @@ def astar_monster(matrix, start, goal):
 
 def find_path_to_food(matrix, pacman_position, multipleFood=False, isPacmanFood=False):
     food_position = None
-    if isPacmanFood == False:
-        if multipleFood==False:
+    if is_more_food(matrix):
+        if isPacmanFood == False:
+            if multipleFood==False:
+                for i in range(len(matrix)):
+                    for j in range(len(matrix[0])):
+                        if matrix[i][j] == 2:
+                            food_position = (i,j)
+        else:
             for i in range(len(matrix)):
-                for j in range(len(matrix[0])):
-                    if matrix[i][j] == 2:
-                        food_position = (i,j)
-    else:
-        for i in range(len(matrix)):
-                for j in range(len(matrix[0])):
-                    if matrix[i][j] == 4:
-                        food_position = (i,j)
-    if food_position is None:
-        return None
+                    for j in range(len(matrix[0])):
+                        if matrix[i][j] == 4:
+                            food_position = (i,j)
+        if food_position is None:
+            return None
 
-    return astar(matrix, pacman_position, food_position)
+        return astar(matrix, pacman_position, food_position)
+    else:
+        return False
+        
+
+def is_more_food(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 2:
+                return True
+    return False
 
 
 
 # Update Pacman's position based on the path found by A*
 def update_pacman_position(matrix, pacman_position):
-    path_to_food = find_path_to_food(matrix, pacman_position)
-    food_position = None
-    monster_positions = []
+    if is_more_food(matrix):
+        path_to_food = find_path_to_food(matrix, pacman_position )
+        food_position = None
+        monster_positions = []
 
-    for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
-            if matrix[i][j] == 2:
-                food_position = (i, j)
-            if matrix[i][j] == 3:
-                monster_positions.append((i,j))
-    
-    if path_to_food:
-        next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
-        if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
-            # Kết thúc trò chơi ở đây
-            print("Game Over")
-            return False
-        else:
-            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
-            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
-            if (next_position[0], next_position[1]) == food_position:
-                print("You Win")
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 2:
+                    food_position = (i, j)
+                if matrix[i][j] == 3:
+                    monster_positions.append((i,j))
+        
+        if path_to_food:
+            next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
+            if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
+                # Kết thúc trò chơi ở đây
+                print("Game Over")
                 return False
+            else:
+                matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+                matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+                if (next_position[0], next_position[1]) == food_position:
+                    print("You Win")
+                    return False
+                return next_position
+        else:
+
+            path_to_monster = astar_monster(matrix, pacman_position, food_position) # still the shortest way to food but pacman might collide with monster
+            next_position = path_to_monster[1] if path_to_monster else pacman_position
+
+            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            if (next_position[0], next_position[1]) in monster_positions:
+                print("Game Over")
+                return False
+            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
             return next_position
     else:
-
-        path_to_monster = astar_monster(matrix, pacman_position, food_position) # still the shortest way to food but pacman might collide with monster
-        next_position = path_to_monster[1] if path_to_monster else pacman_position
-
-        matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
-        if (next_position[0], next_position[1]) in monster_positions:
-            print("Game Over")
-            return False
-        matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
-        return next_position
+        return False
 
 def update_monster_position (matrix, monster_postion):
-    path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
+    # path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
     food_position = None
 
     for i in range(len(matrix)):
@@ -143,3 +157,22 @@ def update_monster_position (matrix, monster_postion):
 
     path_to_monster = astar_monster(matrix, monster_postion, food_position)
     next_position = path_to_monster[1] if path_to_monster else monster_postion
+
+    # Delete the current postion of ghost
+    matrix[monster_postion[0]][monster_postion[1]] = 0
+    # Update the next postion
+    matrix[next_position[0]][next_position[1]] = 3
+
+    if (next_position[0], next_position[1]) == food_position:
+        print("Game Over")
+        return False
+    return next_position
+
+
+def update_monsters_postion (matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 3:
+                monster_position = (i,j)
+                update_monster_position(matrix, monster_position)
+
