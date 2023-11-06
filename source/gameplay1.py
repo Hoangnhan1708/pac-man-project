@@ -1,4 +1,3 @@
-import pygame
 import heapq
 # Heuristic function (h(x): estimated distance from processing location to goal)
 def heuristic(a, b):
@@ -82,7 +81,7 @@ def update_pacman_position(matrix, pacman_position):
             matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
             if (next_position[0],next_position[1]) == foodPosition :
                 print("You Win")
-                # return False
+                return False
             return next_position
     return pacman_position
 

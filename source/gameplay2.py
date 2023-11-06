@@ -1,5 +1,6 @@
-import pygame
 import heapq
+import pygame
+
 # Heuristic function (h(x): estimated distance from processing location to goal)
 def heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -22,13 +23,13 @@ def get_neighbors_monster(matrix, node): # this function like above but not proc
 
 
 # A* algorithm
-def astar(matrix, start, goal): # start, goal = tuple(x,y)
-    open_set = [] # list use to store traveled location
+def astar(matrix, start, goal):
+    open_set = []
     heapq.heappush(open_set, (0, start))
-    came_from = {start: None} # dictionary store {location : its own parent}
-    g_score = {start: 0} # g(x) : distance from start location to processing location
+    came_from = {start: None}
+    g_score={start: 0}
     while open_set:
-        current = heapq.heappop(open_set)[1] 
+        current = heapq.heappop(open_set)[1]
         if current == goal:
             path = []
             while current in came_from:
@@ -36,15 +37,18 @@ def astar(matrix, start, goal): # start, goal = tuple(x,y)
                 current = came_from[current]
             path.reverse()
             return path
-        
-        for neighbor in get_neighbors(matrix, current): # Xem ở đây sẽ hiểu : https://www.youtube.com/watch?v=G7XnNtF7UEE&t=368s&ab_channel=%C4%90%E1%BB%97Ph%C3%BAcH%E1%BA%A3o
+
+        for neighbor in get_neighbors(matrix, current):
             temp_g = g_score[current] + 1
+            
             if neighbor not in g_score or temp_g < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = temp_g
-                f_score = temp_g + heuristic(neighbor, goal) # f(x) = g(x) + h(x)
-                heapq.heappush(open_set, (f_score, neighbor))
+                f_score = temp_g + heuristic(neighbor, goal)
+                if neighbor not in open_set:
+                    heapq.heappush(open_set, (f_score, neighbor))
     return None
+
 
 def astar_monster(matrix, start, goal):
     open_set = []
@@ -72,7 +76,6 @@ def astar_monster(matrix, start, goal):
     return None
 
 
-
 def find_path_to_food(matrix, pacman_position):
     food_position = None
     for i in range(len(matrix)):
@@ -92,12 +95,12 @@ def update_pacman_position(matrix, pacman_position):
     monster_positions = []
 
     for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
+        for j in range(len(matrix)):
             if matrix[i][j] == 2:
                 food_position = (i, j)
             if matrix[i][j] == 3:
                 monster_positions.append((i,j))
-    
+ 
     if path_to_food:
         next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
         if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật

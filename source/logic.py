@@ -1,10 +1,8 @@
 import pygame
 import numpy as np
 
-WIDTH = 900 # width of console
-HEIGHT = 950 # height of console
-
-
+WIDTH = 700 # width of console
+HEIGHT = 750 # height of console
 def extractMatrix(nameFile): # return numpy matrix
     last_line = None
     with open(f'input/{nameFile}', 'r') as file:
