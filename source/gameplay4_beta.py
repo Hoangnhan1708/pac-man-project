@@ -11,7 +11,7 @@ def get_neighbors(matrix, node): # node = tuple (x,y) => node[0] = x, node[1] = 
     for i, j in [(0, 1), (0, -1), (1, 0), (-1, 0)]: # Phải trái trên dưới
         if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j])  != 1 : # check index of node is out of range and not a wall
                                                                                                                                                                                                 #here or (matrix[node[0] + i][node[1] + j] ==0)
-            if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) !=3 : # treat monster like wall
+            if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and matrix[node[0] + i][node[1] + j] in (0,1,2,999) : # treat monster like wall
                
                 neighbors.append((node[0] + i, node[1] + j))
      
@@ -21,7 +21,7 @@ def get_neighbors_monster(matrix, node): # this function like above but not proc
     neighbors = []
     for i, j in [(0, 1), (0, -1), (1, 0), (-1, 0)]: # Phải trái trên dưới
         if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and matrix[node[0] + i][node[1] + j] != 1 : # check index of node is out of range and not a wall
-                neighbors.append((node[0] + i, node[1] + j))   
+                neighbors.append((node[0] + i, node[1] + j))
     return neighbors
 
 # A* algorithm
@@ -40,7 +40,7 @@ def astar(matrix, start, goal): # start, goal = tuple(x,y)
             path.reverse()
             return path
         
-        for neighbor in get_neighbors(matrix, current): # Xem ở đây sẽ hiểu : https://www.youtube.com/watch?v=G7XnNtF7UEE&t=368s&ab_channel=%C4%90%E1%BB%97Ph%C3%BAcH%E1%BA%A3o
+        for neighbor in get_neighbors(matrix, current): 
             temp_g = g_score[current] + 1
             if neighbor not in g_score or temp_g < g_score[neighbor]:
                 came_from[neighbor] = current
@@ -183,9 +183,6 @@ def update_monster_position(matrix, monster_postion):
     # Delete the current postion of ghost
     matrix[monster_postion[0]][monster_postion[1]] -= 3
     # Update the next postion
-    if matrix[next_position[0]][next_position[1]] in (888,999,0):
-        matrix[next_position[0]][next_position[1]] = 0
-        
     matrix[next_position[0]][next_position[1]] += 3
 
     if (next_position[0], next_position[1]) == food_position:
@@ -200,7 +197,12 @@ def update_monsters_postion (matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
             if matrix[i][j] not in (888,999,0) and matrix[i][j] // 3 > 0:
-                for k in range(matrix[i][j] // 3):
+                if matrix[i][j] > 999:
+                    repeat = (matrix[i][j] - 999) // 3
+                else:
+                    repeat = matrix[i][j] // 3
+                
+                for k in range(repeat):
                     monsters_position.append((i,j))
  
     for monster_position in monsters_position:
