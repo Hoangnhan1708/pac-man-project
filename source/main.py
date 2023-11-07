@@ -26,7 +26,7 @@ player_location = extract.extractLocation('map1.txt')
 player_x = player_location[0] 
 player_y = player_location[1]
 
-matrix[player_x][player_y] = 4
+matrix[player_x][player_y] = 888
 direction = 0
 counter = 0
 
@@ -57,17 +57,17 @@ def render(matrix):
             if matrix[i][j] == 1: # Wall
                 pygame.draw.rect(screen, color_wall, pygame.Rect(j* width_tile + (0.3 * width_tile) , i * height_tile + (0.3 * height_tile) , width_tile, height_tile))
                 
-            if matrix[i][j] == 2: # Food
+            if matrix[i][j] % 3 == 2 and matrix[i][j] // 3 == 0: # Food
                 screen.blit(food_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
                 
-            
-            if matrix[i][j] == 3: # Monster
+            #here matrix[i][j] != 0 and
+            if  matrix[i][j] % 3 == 0 and matrix[i][j] not in (888,999,0): # Monster
                 screen.blit(monster_images[counter //5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
-            if matrix[i][j] == 4: # Pacman
+            if matrix[i][j] == 888: # Pacman
                 screen.blit(player_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
-            if matrix[i][j] == 5: # Location which pacman gone
+            if matrix[i][j] == 999: # Location which pacman gone
                 pygame.draw.circle(screen, 'white', (j* width_tile + (0.7 * width_tile)  , i * height_tile + (0.7 * height_tile) ) , 5)
 
 

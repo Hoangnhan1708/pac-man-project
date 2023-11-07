@@ -9,9 +9,14 @@ def heuristic(a, b):
 def get_neighbors(matrix, node): # node = tuple (x,y) => node[0] = x, node[1] = y
     neighbors = []
     for i, j in [(0, 1), (0, -1), (1, 0), (-1, 0)]: # Phải trái trên dưới
-        if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and matrix[node[0] + i][node[1] + j] != 1 : # check index of node is out of range and not a wall
-            if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and matrix[node[0] + i][node[1] + j] != 3: # treat monster like wall
-                neighbors.append((node[0] + i, node[1] + j))   
+        
+        
+        if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) % 3 != 1 : # check index of node is out of range and not a wall
+                                                                                                                                                                                                #here or (matrix[node[0] + i][node[1] + j] ==0)
+            if (0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) % 3 != 0 and matrix[node[0] + i][node[1] + j] not in (888,999,0)) : # treat monster like wall
+               
+                neighbors.append((node[0] + i, node[1] + j))
+     
     return neighbors # tuple (x,y)
 
 def get_neighbors_monster(matrix, node): # this function like above but not process monster
@@ -69,7 +74,6 @@ def astar_monster(matrix, start, goal):
                 g_score[neighbor] = temp_g
                 f_score = temp_g + heuristic(neighbor, goal)
                 heapq.heappush(open_set, (f_score, neighbor))
-     
     return None
 
 def astar_multi_goal(matrix, start, goals):
@@ -88,6 +92,7 @@ def astar_multi_goal(matrix, start, goals):
             return path
 
         for neighbor in get_neighbors(matrix, current):
+            
             temp_g = g_score[current] + 1
             if neighbor not in g_score or temp_g < g_score[neighbor]:
                 came_from[neighbor] = current
@@ -105,17 +110,18 @@ def find_path_to_food(matrix, pacman_position, isPacmanFood=False):
         if isPacmanFood == False:
             for i in range(len(matrix)):
                 for j in range(len(matrix[0])):
-                    if matrix[i][j] == 2:
+                    if matrix[i][j] % 3 == 2:
                         foods_position.append((i,j))
         else:
             for i in range(len(matrix)):
                     for j in range(len(matrix[0])):
-                        if matrix[i][j] == 4:
+                        if matrix[i][j] == 888:
                             food_position = (i,j)
                             break
+
         if len(foods_position) ==0:
             return None
-
+        
         return astar_multi_goal(matrix, pacman_position, foods_position)
     else:
         return False
@@ -124,7 +130,7 @@ def find_path_to_food(matrix, pacman_position, isPacmanFood=False):
 def is_more_food(matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
-            if matrix[i][j] == 2:
+            if matrix[i][j] % 3 == 2 and matrix[i][j] // 3 == 0:
                 return True
     return False
 
@@ -136,22 +142,24 @@ def update_pacman_position(matrix, pacman_position):
         path_to_food = find_path_to_food(matrix, pacman_position )
         foods_position = []
         monster_positions = []
+        
 
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
-                if matrix[i][j] == 2:
+                if matrix[i][j] % 3 == 2 and matrix[i][j] // 3 == 0:
                     foods_position.append((i,j))
-                if matrix[i][j] == 3:
+                if matrix[i][j] % 3 == 0 and matrix[i][j] not in (888,999,0):
                     monster_positions.append((i,j))
         
         if path_to_food:
             next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
-            if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
+                #here matrix[next_position[0]][next_position[1]] !=0 and 
+            if matrix[next_position[0]][next_position[1]] % 3 == 0 and matrix[next_position[0]][next_position[1]] not in (888,999,0):  # Kiểm tra nếu Pacman chạm vào quái vật
                 # Kết thúc trò chơi ở đây
                 print("Game Over")
                 return False
             else:
-                matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+                matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
                 if (next_position[0], next_position[1]) in foods_position:
                     # time.sleep(10)
                     # pacman_position = next_position
@@ -160,18 +168,19 @@ def update_pacman_position(matrix, pacman_position):
                     # path_to_food = find_path_to_food(matrix, pacman_position )
                     # next_position = path_to_food[0]
                     # matrix[next_position[0]][next_position[1]] = 5
-                matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+                matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
                 return next_position
         else:
 
             path_to_monster = astar_monster(matrix, pacman_position, foods_position[0]) # still the shortest way to food but pacman might collide with monster
             next_position = path_to_monster[1] if path_to_monster else pacman_position
 
-            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
             if (next_position[0], next_position[1]) in monster_positions:
                 print("Game Over")
                 return False
-            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+            matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
+            
             return next_position
     else:
         return False
@@ -182,16 +191,16 @@ def update_monster_position(matrix, monster_postion):
 
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
-            if matrix[i][j] == 4:
+            if matrix[i][j] == 888:
                 food_position = (i, j)
 
     path_to_monster = astar_monster(matrix, monster_postion, food_position)
     next_position = path_to_monster[1] if path_to_monster else monster_postion
 
     # Delete the current postion of ghost
-    matrix[monster_postion[0]][monster_postion[1]] = 0
+    matrix[monster_postion[0]][monster_postion[1]] -= 3
     # Update the next postion
-    matrix[next_position[0]][next_position[1]] = 3
+    matrix[next_position[0]][next_position[1]] += 3
 
     if (next_position[0], next_position[1]) == food_position:
         # time.sleep(15)
@@ -204,7 +213,8 @@ def update_monsters_postion (matrix):
     monsters_position = []
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
-            if matrix[i][j] == 3:
+            if matrix[i][j] != 0 and matrix[i][j] % 3 == 0 and matrix[i][j] not in (888,999,0):
+                # for i in range(matrix[i][j] // 3):
                 monsters_position.append((i,j))
     for monster_position in monsters_position:
         update_monster_position(matrix, monster_position)
