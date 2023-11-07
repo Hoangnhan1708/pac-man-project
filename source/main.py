@@ -3,25 +3,30 @@ import numpy as np
 import extract
 import gameplay1 
 import gameplay2 
+import gameplay3
+import random
+
+
 pygame.init()
 pygame.font.init()
 WIDTH = 700 # width of console
 HEIGHT = 750 # height of console
 screen = pygame.display.set_mode([WIDTH,HEIGHT])
 timer = pygame.time.Clock()
-fps = 10
+fps = 2
 font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
 color_food = 'red'
-matrix = extract.extractMatrix('map1.txt')
-# matrix = extract.extractMatrix('map2.txt')
+
+# matrix = extract.extractMatrix('map1.txt')
+matrix = extract.extractMatrix('map3.txt')
 
 rows, cols = len(matrix), len(matrix[0])
 width_tile = (WIDTH//cols) # width of each piece
 height_tile = ((HEIGHT - 50) //rows) # height of each piece
 
-player_location = extract.extractLocation('map1.txt')
+player_location = extract.extractLocation('map3.txt')
 player_x = player_location[0] 
 player_y = player_location[1]
 
@@ -29,7 +34,7 @@ matrix[player_x][player_y] = 4
 direction = 0
 counter = 0
 
-score_value = 100
+score_value = 10000000000
 
 
 # Get image 
@@ -74,28 +79,24 @@ while run:
     else:
         counter = 0
     screen.fill('black')
-    
-    if gameplay2.update_pacman_position(matrix, (player_x, player_y)):
-        # player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
-        player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
-        score_value -= 1
-        if score_value == 0:
-            run = False
-    else:
+    matrix[player_x][player_y] = 0
+    matrix_visible_range = gameplay3.pacman_visibility_range(matrix, (player_x,player_y))
+    # matrix_visible_range = gameplay3.move_pacman(matrix,(player_x,player_y))
+    # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
+    #player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
+    (player_x, player_y) = gameplay3.update_pacman_position(matrix_visible_range, (player_x, player_y))
+    gameplay3.update_monsters_postion(matrix)
+    if (player_x, player_y) == (-1,-1):
+        run =False
+    score_value -= 1
+    if score_value == 0:
         run = False
-        
     
-    render(matrix)
+    render(matrix_visible_range)
     render_core(300,700)
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         
     pygame.display.flip()
 pygame.quit()
-
-
-
-
-
