@@ -10,7 +10,7 @@ WIDTH = 700 # width of console
 HEIGHT = 750 # height of console
 screen = pygame.display.set_mode([WIDTH,HEIGHT])
 timer = pygame.time.Clock()
-fps = 2
+fps = 10
 font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
 color_wall = 'blue'
 color_monster = 'white'
@@ -81,8 +81,10 @@ while run:
     screen.fill('black')
     
     
-    (player_x,player_y) = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
     gameplay4_beta.update_monsters_postion(matrix)
+    (player_x,player_y) = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
+    if (player_x,player_y) == None:
+        run = False
     # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
     score_value -= 1
     # if score_value == 0:

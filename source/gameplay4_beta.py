@@ -9,9 +9,9 @@ def heuristic(a, b):
 def get_neighbors(matrix, node): # node = tuple (x,y) => node[0] = x, node[1] = y
     neighbors = []
     for i, j in [(0, 1), (0, -1), (1, 0), (-1, 0)]: # Phải trái trên dưới
-        if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) % 3 != 1 : # check index of node is out of range and not a wall
+        if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j])  != 1 : # check index of node is out of range and not a wall
                                                                                                                                                                                                 #here or (matrix[node[0] + i][node[1] + j] ==0)
-            if (0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) % 3 != 0 and matrix[node[0] + i][node[1] + j] not in (888,999,0)) : # treat monster like wall
+            if 0 <= node[0] + i < len(matrix) and 0 <= node[1] + j < len(matrix[0]) and (matrix[node[0] + i][node[1] + j]) !=3 : # treat monster like wall
                
                 neighbors.append((node[0] + i, node[1] + j))
      
@@ -142,17 +142,14 @@ def update_pacman_position(matrix, pacman_position):
             if matrix[next_position[0]][next_position[1]] % 3 == 0 and matrix[next_position[0]][next_position[1]] not in (888,999,0):  # Kiểm tra nếu Pacman chạm vào quái vật
                 # Kết thúc trò chơi ở đây
                 print("Game Over")
-                return False
+                return None
             else:
                 matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
                 if (next_position[0], next_position[1]) in foods_position:
-                    # time.sleep(10)
-                    # pacman_position = next_position
-                    # matrix[next_position[0]][next_position[1]] = 4
+                    
                     foods_position = foods_position.remove((next_position[0], next_position[1]))
-                    # path_to_food = find_path_to_food(matrix, pacman_position )
-                    # next_position = path_to_food[0]
-                    # matrix[next_position[0]][next_position[1]] = 5
+                    
+                    
                 matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
                 return next_position
         else:
@@ -179,8 +176,9 @@ def update_monster_position(matrix, monster_postion):
             if matrix[i][j] == 888:
                 food_position = (i, j)
                 break
-
+    print(food_position)
     path_to_monster = astar_monster(matrix, monster_postion, food_position)
+    
     next_position = path_to_monster[1] if path_to_monster else monster_postion
 
     # Delete the current postion of ghost
@@ -194,7 +192,7 @@ def update_monster_position(matrix, monster_postion):
     if (next_position[0], next_position[1]) == food_position:
         # time.sleep(15)
         print("Game Over")
-        return False
+        return None
     return next_position
 
 
