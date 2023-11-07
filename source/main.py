@@ -22,7 +22,7 @@ rows, cols = len(matrix), len(matrix[0])
 width_tile = (WIDTH//cols) # width of each piece
 height_tile = ((HEIGHT - 50) //rows) # height of each piece
 
-player_location = extract.extractLocation('map1.txt')
+player_location = extract.extractLocation('map4.txt')
 player_x = player_location[0] 
 player_y = player_location[1]
 
@@ -57,11 +57,11 @@ def render(matrix):
             if matrix[i][j] == 1: # Wall
                 pygame.draw.rect(screen, color_wall, pygame.Rect(j* width_tile + (0.3 * width_tile) , i * height_tile + (0.3 * height_tile) , width_tile, height_tile))
                 
-            if matrix[i][j] % 3 == 2 and matrix[i][j] // 3 == 0: # Food
+            if matrix[i][j] == 2: # Food
                 screen.blit(food_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
                 
             #here matrix[i][j] != 0 and
-            if  matrix[i][j] % 3 == 0 and matrix[i][j] not in (888,999,0): # Monster
+            if  matrix[i][j] // 3 > 0 and matrix[i][j] not in (888,999,0): # Monster
                 screen.blit(monster_images[counter //5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
             if matrix[i][j] == 888: # Pacman
