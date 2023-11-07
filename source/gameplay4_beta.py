@@ -149,7 +149,6 @@ def update_pacman_position(matrix, pacman_position):
                     
                     foods_position = foods_position.remove((next_position[0], next_position[1]))
                     
-                    
                 matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
                 return next_position
         else:
@@ -165,7 +164,7 @@ def update_pacman_position(matrix, pacman_position):
             
             return next_position
     else:
-        return False
+        return (-1,-1)
 
 def update_monster_position(matrix, monster_postion):
     # path_to_food = find_path_to_food(matrix, monster_postion, isPacmanFood=True)
@@ -176,7 +175,7 @@ def update_monster_position(matrix, monster_postion):
             if matrix[i][j] == 888:
                 food_position = (i, j)
                 break
-    print(food_position)
+    
     path_to_monster = astar_monster(matrix, monster_postion, food_position)
     
     next_position = path_to_monster[1] if path_to_monster else monster_postion
@@ -192,7 +191,7 @@ def update_monster_position(matrix, monster_postion):
     if (next_position[0], next_position[1]) == food_position:
         # time.sleep(15)
         print("Game Over")
-        return None
+        return (-1,-1)
     return next_position
 
 

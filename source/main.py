@@ -83,7 +83,7 @@ while run:
     
     gameplay4_beta.update_monsters_postion(matrix)
     (player_x,player_y) = gameplay4_beta.update_pacman_position(matrix, (player_x, player_y))
-    if (player_x,player_y) == None:
+    if (player_x,player_y) == (-1,-1):
         run = False
     # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
     score_value -= 1
