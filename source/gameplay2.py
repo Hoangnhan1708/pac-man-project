@@ -1,6 +1,6 @@
 import heapq
 import extract
-from pygame import event, QUIT, display, time
+from pygame import event, QUIT, display
 import render
 
 # Heuristic function (h(x): estimated distance from processing location to goal)
@@ -110,8 +110,8 @@ def update_pacman_position(matrix, pacman_position):
             print("Game Over")
             return (-1,-1)
         else:
-            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
-            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+            matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
             if (next_position[0], next_position[1]) == food_position:
                 print("You Win")
                 return False
@@ -121,11 +121,11 @@ def update_pacman_position(matrix, pacman_position):
         path_to_monster = astar_monster(matrix, pacman_position, food_position) # still the shortest way to food but pacman must collide with monster
         next_position = path_to_monster[1] if path_to_monster else pacman_position
 
-        matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+        matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
         if (next_position[0], next_position[1]) in monster_positions:
             print("Game Over")
             return (-1,-1)
-        matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+        matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
 
         return next_position
 

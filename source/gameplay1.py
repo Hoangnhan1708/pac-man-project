@@ -81,8 +81,8 @@ def update_pacman_position(matrix, pacman_position):
             print("Game Over")
             return (-1,-1)
         else:
-            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
-            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+            matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
             if (next_position[0],next_position[1]) == foodPosition :
                 print("You Win")
                 return (-1,-1)

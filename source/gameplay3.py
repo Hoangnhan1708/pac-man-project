@@ -143,7 +143,6 @@ def update_pacman_position(matrix, pacman_position):
         for j in range(len(matrix[0])):
             if matrix[i][j] == 3:
                 monster_positions.append((i,j))
-    print(monster_positions)
     if path_to_food:
         
         next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
@@ -152,19 +151,19 @@ def update_pacman_position(matrix, pacman_position):
             print("Game Over")
             return (-1,-1)
         else:
-            matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
-            matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+            matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
+            matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
 
             return next_position
     else:
         # In case of there is no possible path for pacman to eat food, so we just make pacman collide to end the game
         next_position = go_random(matrix, pacman_position)
         
-        matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
+        matrix[pacman_position[0]][pacman_position[1]] = 999  # Đánh dấu lại vị trí mà Pacman đã đi qua
         if (next_position[0], next_position[1]) in monster_positions:
             print("Game Over")
             return (-1,-1)
-        matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
+        matrix[next_position[0]][next_position[1]] = 888  # Di chuyển Pacman đến vị trí tiếp theo
 
         return next_position
 
@@ -180,7 +179,7 @@ def update_monster_position(matrix, monster_postion):
         for j in range(len(matrix_default[0])):
             if matrix_default[i][j] == 3:
                 monsters_default_position.append((i,j))
-            if matrix[i][j] == 4:
+            if matrix[i][j] == 888:
                 food_position = (i, j)
     
     
@@ -198,7 +197,6 @@ def update_monster_position(matrix, monster_postion):
 
     # Delete the current postion of ghost
     # Update the next postion
-    print(food_position)
     if (next_position[0], next_position[1]) == food_position:
         print("Game Over")
         return False
@@ -233,7 +231,7 @@ def play(timer, screen):
         else:
             counter = 0
         screen.fill('black')
-        matrix[player_x][player_y] = 5
+        matrix[player_x][player_y] = 999
         matrix_visible_range = pacman_visibility_range(matrix, (player_x,player_y))
         (player_x, player_y) = update_pacman_position(matrix_visible_range, (player_x, player_y))
         if update_monsters_postion(matrix_visible_range) == False:

@@ -8,6 +8,7 @@ import numpy as np
 import gameplay1
 import gameplay2
 import gameplay3
+import gameplay4
 
 
 pygame.init()
@@ -113,7 +114,7 @@ while True:
                 if 290 < mouse[0] < 410  and 360 <mouse[1] <420:
                     pygame.draw.rect(screen, (128, 0, 128), (290,360,120,60)) # Brighter when hover
                     if click[0] == 1:
-                        print("oke")#Run Level 4
+                        gameplay4.play(timer,screen)
                         
                 else:
                     pygame.draw.rect(screen, (139, 0, 139), (290,360,120,60)) # Darker normally

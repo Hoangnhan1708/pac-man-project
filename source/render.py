@@ -19,7 +19,7 @@ height_tile = ((HEIGHT - 50) //rows) # height of each piece
 direction = 0
 counter = 0
 score_value = 100
-monster_image =pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/blue.png'),(20,20))
+monster_image =pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/1.png'),(20,20))
 food_image = pygame.transform.scale(pygame.image.load(f'source/assets/food_image/apple.png'),(25,25))
 
 # Get image 
@@ -42,13 +42,14 @@ def render(matrix):
                 screen.blit(food_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
                 
             
-            if matrix[i][j] == 3: # Monster
+            if  matrix[i][j] // 3 > 0 and matrix[i][j] not in (888,999,0): # Monster
+
                 screen.blit(monster_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
-            if matrix[i][j] == 4: # Pacman
+            if matrix[i][j] == 888: # Pacman
                 screen.blit(player_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
             
-            if matrix[i][j] == 5: # Location which pacman gone
+            if matrix[i][j] == 999: # Location which pacman gone
                 pygame.draw.circle(screen, 'white', (j* width_tile + (0.7 * width_tile)  , i * height_tile + (0.7 * height_tile) ) , 5)
 
 def text_objects(text, font):
