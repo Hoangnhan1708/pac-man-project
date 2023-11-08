@@ -242,7 +242,9 @@ def play(timer, screen):
         score_value -= 1
         if score_value == 0:
             run = False
-        
+        if matrix[player_x][player_y] == 2:
+            score_value += 20
+
         render.render(matrix_visible_range)
         render.render_score(300,700, score_value)
         for eventElement in event.get():
