@@ -1,4 +1,8 @@
 import heapq
+import extract
+from pygame import event, QUIT, display, time
+import render
+
 # Heuristic function (h(x): estimated distance from processing location to goal)
 def heuristic(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -75,13 +79,45 @@ def update_pacman_position(matrix, pacman_position):
         if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
             # Kết thúc trò chơi ở đây
             print("Game Over")
-            return False
+            return (-1,-1)
         else:
             matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
             matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
             if (next_position[0],next_position[1]) == foodPosition :
                 print("You Win")
-                return False
+                return (-1,-1)
             return next_position
     return pacman_position
 
+def play(timer, screen):
+    fps = 10
+    run = True      
+    matrix = extract.extractMatrix('map{}.txt'.format(1))
+    player_location = extract.extractLocation('map{}.txt'.format(1))      
+    direction = 0
+    counter = 0
+    score_value = 100           
+    player_x = player_location[0] 
+    player_y = player_location[1]
+    while run:      
+        timer.tick(fps)
+        if counter < 19:
+            counter+=1
+        else:
+            counter = 0                                        
+        screen.fill('black')                                      
+        if  (player_x, player_y) != (-1,-1):
+            player_x, player_y = update_pacman_position(matrix, (player_x, player_y))
+            score_value -= 1
+            if score_value == 0:
+                run = False
+        else:
+            run = False
+
+        render.render(matrix)
+        render.render_score(300,700,score_value)
+
+        for eventElement in event.get():
+            if eventElement.type == QUIT:
+                    run = False   
+        display.flip()     
