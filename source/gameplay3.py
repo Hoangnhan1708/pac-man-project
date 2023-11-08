@@ -3,6 +3,7 @@ import heapq
 import random
 import numpy as np
 import extract
+from collections import deque
 #def move_pacman_randomly(pacman_position):
 
     #return pacman_position
@@ -59,6 +60,15 @@ def go_random(matrix, start):
         return next_position
     else:
         return start
+def go_fixed_direction(matrix, start):
+
+    # Lấy danh sách các hướng có thể đi
+    valid_path = get_neighbors(matrix, start)
+    directions = [(start[0] +0, start[1] - 1), (start[0] +1, start[1] ), (start[0] +0, start[1] + 1), (start[0] -1 , start[1] +0)]
+    # Nếu hướng hiện tại có thể đi, trả về hướng đó
+    for direction in directions:
+        if direction in valid_path:
+            return direction
     
 # Heuristic function (h(x): estimated distance from processing location to goal)
 def heuristic(a, b):
@@ -131,6 +141,9 @@ def astar_monster(matrix, start, goal):
     
     return None
 
+
+
+
 def find_path_to_food(matrix, pacman_position):
     food_position = None
     for i in range(len(matrix)):
@@ -147,6 +160,7 @@ def find_path_to_food(matrix, pacman_position):
 def update_pacman_position(matrix, pacman_position):
     
     path_to_food = find_path_to_food(matrix, pacman_position)
+    matrix_default = extract.extractMatrix('map3.txt')
     food_position = None
     monster_positions = []
 
@@ -160,10 +174,10 @@ def update_pacman_position(matrix, pacman_position):
     if path_to_food:
         
         next_position = path_to_food[1]  # Lấy vị trí thứ hai trong danh sách đường đi
-        if matrix[next_position[0]][next_position[1]] == 3:  # Kiểm tra nếu Pacman chạm vào quái vật
+        if (next_position[0], next_position[1]) in monster_positions:  # Kiểm tra nếu Pacman chạm vào quái vật
             # Kết thúc trò chơi ở đây
             print("Game Over")
-            return False
+            return (-1,-1)
         else:
             matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
             matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
@@ -181,7 +195,7 @@ def update_pacman_position(matrix, pacman_position):
         matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
         if (next_position[0], next_position[1]) in monster_positions:
             print("Game Over")
-            
+            return (-1,-1)
         matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
 
         return next_position
@@ -193,16 +207,14 @@ def update_monster_position(matrix, monster_postion):
     food_position = None
     monsters_default_position = []
     valid_paths = []
-    matrix_map = extract.extractMatrix('map3.txt')
-    for i in range(len(matrix_map)):
-        for j in range(len(matrix_map[0])):
-            if matrix_map[i][j] == 3:
+    matrix_default = extract.extractMatrix('map3.txt')
+    for i in range(len(matrix_default)):
+        for j in range(len(matrix_default[0])):
+            if matrix_default[i][j] == 3:
                 monsters_default_position.append((i,j))
-    
-    for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
             if matrix[i][j] == 4:
                 food_position = (i, j)
+    
     
     if monster_postion not in monsters_default_position:
         for position in monsters_default_position:
@@ -217,14 +229,13 @@ def update_monster_position(matrix, monster_postion):
     
 
     # Delete the current postion of ghost
-    matrix[monster_postion[0]][monster_postion[1]] = 0
     # Update the next postion
-    matrix[next_position[0]][next_position[1]] = 3
-
+    
     if (next_position[0], next_position[1]) == food_position:
-        # time.sleep(15)
         print("Game Over")
-        return (-1,-1)
+        return False
+    matrix[monster_postion[0]][monster_postion[1]] = 0
+    matrix[next_position[0]][next_position[1]] = 3
     return next_position
 
 def update_monsters_postion (matrix):
@@ -235,3 +246,6 @@ def update_monsters_postion (matrix):
                 monsters_position.append((i,j))
     for monster_position in monsters_position:
         update_monster_position(matrix, monster_position)
+        
+            
+        
