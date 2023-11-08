@@ -182,9 +182,7 @@ def update_pacman_position(matrix, pacman_position):
             matrix[pacman_position[0]][pacman_position[1]] = 5  # Đánh dấu lại vị trí mà Pacman đã đi qua
             matrix[next_position[0]][next_position[1]] = 4  # Di chuyển Pacman đến vị trí tiếp theo
 
-            # if (next_position[0], next_position[1]) == food_position:
-            #     print("You Win")
-            #     return False
+           
             return next_position
     else:
         # In case of there is no possible path for pacman to eat food, so we just make pacman collide to end the game
@@ -230,7 +228,7 @@ def update_monster_position(matrix, monster_postion):
 
     # Delete the current postion of ghost
     # Update the next postion
-    
+ 
     if (next_position[0], next_position[1]) == food_position:
         print("Game Over")
         return False
