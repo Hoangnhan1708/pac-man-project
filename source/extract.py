@@ -16,7 +16,7 @@ def extractMatrix(nameFile): # return numpy matrix
     first_line = file.readline().strip().split(' ')
     row = int(first_line[0]) # number of row
     col = int(first_line[1]) # number of col
-    matrix = np.zeros((row, col))
+    matrix = np.zeros((row, col), dtype= int)
     
     i = 0
     for line in file:

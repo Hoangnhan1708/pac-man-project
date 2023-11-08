@@ -1,5 +1,6 @@
 import render
 import extract
+
 import pygame   
 import heapq
 import math
@@ -141,6 +142,7 @@ while True:
     TextRect.center = ((350), (150))#Vị trí chữ
     screen.blit(TextSurf, TextRect)
         
+
     # Credit Button
     if 290 < mouse[0] < 410 and 200 <mouse[1] <260:#Nếu di chuyển chuột vào vugnf này
         pygame.draw.rect(screen, (255,250,0), (290,200,120,60)) # Brighter when hover
