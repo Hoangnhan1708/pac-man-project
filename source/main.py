@@ -27,7 +27,7 @@ creditList = [
     "21120402 - Truong Hoang Nhan",
     "21120403 - Nguyen Hoang Quan",
     "21120406 - Le Viet Dat Trong",
-    "21120416 - Ha Quoc Bao"
+    "21120414 - Ha Quoc Bao"
 ]
 
 while True:
