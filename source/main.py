@@ -1,13 +1,11 @@
 import render
+import extract
 import pygame   
 import heapq
 import math
 import numpy as np
-import extract
-import gameplay1 
-import gameplay2 
-import gameplay3
-import random
+import gameplay2
+import gameplay1
 
 
 pygame.init()
@@ -17,102 +15,29 @@ HEIGHT = 750 # height of console
 screen = pygame.display.set_mode([WIDTH,HEIGHT])
 timer = pygame.time.Clock()
 fps = 10
+
 font = pygame.font.Font('source/assets/font/freesansbold.ttf',32)
-color_wall = 'blue'
-color_monster = 'white'
-color_food = 'red'
 
-# matrix = extract.extractMatrix('map1.txt')
-matrix = extract.extractMatrix('map3.txt')
-
-rows, cols = len(matrix), len(matrix[0])
-width_tile = (WIDTH//cols) # width of each piece
-height_tile = ((HEIGHT - 50) //rows) # height of each piece
-
-player_location = extract.extractLocation('map3.txt')
-player_x = player_location[0] 
-player_y = player_location[1]
-
-matrix[player_x][player_y] = 4
-direction = 0
-counter = 0
-
-score_value = 10000000000
-
-
-# Get image 
-player_images=[]
-for i in range(1,5):
-    player_images.append(pygame.transform.scale(pygame.image.load(f'source/assets/player_images/{i}.png'),(20,20)))
-
-monster_image =pygame.transform.scale(pygame.image.load(f'source/assets/monster_images/blue.png'),(20,20))
-food_image = pygame.transform.scale(pygame.image.load(f'source/assets/food_image/apple.png'),(25,25))
-return_image =pygame.transform.scale(pygame.image.load(f'source/assets/return_images/return_images.png'),(30,30))
+return_image = pygame.transform.scale(pygame.image.load(f'source/assets/return_images/return_images.png'),(30,30))
 
 creditFont = pygame.font.Font("source/assets/font/freesansbold.ttf", 20)
+
 creditList = [
     "21120402 - Truong Hoang Nhan",
     "21120403 - Nguyen Hoang Quan",
     "21120406 - Le Viet Dat Trong",
     "21120414 - Ha Quoc Bao"
 ]
+ 
 
 while True:
-def render_core(x,y):
-    score = font.render("Score: " + str(score_value), True, (255,255,255))
-    screen.blit(score,(x,y))
-
-
-def render(matrix):
-    for i in range(len(matrix)):
-        for j in range(len(matrix[i])):
-            if matrix[i][j] == 1: # Wall
-                pygame.draw.rect(screen, color_wall, pygame.Rect(j* width_tile + (0.3 * width_tile) , i * height_tile + (0.3 * height_tile) , width_tile, height_tile))
-                
-            if matrix[i][j] == 2: # Food
-                screen.blit(food_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
-                
-            
-            if matrix[i][j] == 3: # Monster
-                screen.blit(monster_image, (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
-            
-            if matrix[i][j] == 4: # Pacman
-                screen.blit(player_images[counter // 5], (j* width_tile + (0.3 * width_tile), i* height_tile + (0.3 * height_tile)))
-            
-            if matrix[i][j] == 5: # Location which pacman gone
-                pygame.draw.circle(screen, 'white', (j* width_tile + (0.7 * width_tile)  , i * height_tile + (0.7 * height_tile) ) , 5)
-
-
-run = True
-while run:
-    timer.tick(fps)
-    if counter < 19:
-        counter+=1
-    else:
-        counter = 0
-    screen.fill('black')
-    matrix[player_x][player_y] = 5
-    matrix_visible_range = gameplay3.pacman_visibility_range(matrix, (player_x,player_y))
-    # matrix_visible_range = gameplay3.move_pacman(matrix,(player_x,player_y))
-    # player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
-    #player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
-    gameplay3.update_monsters_postion(matrix_visible_range)
-    (player_x, player_y) = gameplay3.update_pacman_position(matrix_visible_range, (player_x, player_y))
-    
-    if (player_x, player_y) == (-1,-1):
-        run =False
-    score_value -= 1
-    if score_value == 0:
-        run = False
-    
-    render(matrix_visible_range)
-    render_core(300,700)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
 
     screen.fill((0,0,0)) # Black color for screen
+    
     largeText = pygame.font.Font('source/assets/font/freesansbold.ttf', 100)#Tạo phông chữ với kích cỡ 100 pixel
     TextSurf, TextRect = render.text_objects("Pacman Game", largeText)
     TextRect.center = ((WIDTH / 2), (45))
@@ -124,8 +49,8 @@ while run:
     
 
     # Start button
-    if 290 < mouse[0] < 410 and 120 <mouse[1] <180:#Nếu di chuyển chuột vào vugnf này       
-        pygame.draw.rect(screen, (0,200,0), (290,120,120,60)) # Brighter when hover
+    if 290 < mouse[0] < 410 and 120 <mouse[1] <180:# Nếu di chuyển chuột vào vugnf này       
+        pygame.draw.rect(screen, (0,200,0), (290,120,120,60)) 
         if click[0] == 1:               
             pygame.mouse.set_pos((289,119))
             run_Level=True
@@ -145,36 +70,7 @@ while run:
                 if 290 < mouse[0] < 410 and 120 <mouse[1] <180:#Nếu di chuyển chuột vào vugnf này
                     pygame.draw.rect(screen, (0,200,0), (290,120,120,60)) # Brighter when hover
                     if click[0] == 1:
-                        run = True        
-                        matrix = logic.extractMatrix('map1.txt')
-                        player_location = logic.extractLocation('map1.txt')      
-                        direction = 0
-                        counter = 0
-                        score_value = 100           
-                        player_x = player_location[0] 
-                        player_y = player_location[1]
-                        while run:      
-                            timer.tick(fps)
-                            if counter < 19:
-                                counter+=1
-                            else:
-                                counter = 0                                        
-                            screen.fill('black')                                      
-                            if gameplay1.update_pacman_position(matrix, (player_x, player_y)):
-                                player_x, player_y = gameplay1.update_pacman_position(matrix, (player_x, player_y))
-                                score_value -= 1
-                                if score_value == 0:
-                                    run = False
-                            else:
-                                run = False
-
-                            render.render(matrix)
-                            render.render_core(300,700,score_value)
-
-                            for event in pygame.event.get():
-                                if event.type == pygame.QUIT:
-                                        run = False   
-                            pygame.display.flip()     
+                        gameplay1.play(timer, screen)
                                                                              
                 else:
                     pygame.draw.rect(screen, (0,255,0), (290,120,120,60)) # Darker normally
@@ -188,36 +84,7 @@ while run:
                 if 290 < mouse[0] < 410 and 200 <mouse[1] <260:#Nếu di chuyển chuột vào vùng này
                     pygame.draw.rect(screen, (255,250,0), (290,200,120,60)) # Brighter when hover
                     if click[0] == 1:
-                        run = True        
-                        matrix = logic.extractMatrix('map2.txt')
-                        player_location = logic.extractLocation('map2.txt')      
-                        direction = 0
-                        counter = 0
-                        score_value = 100            
-                        player_x = player_location[0] 
-                        player_y = player_location[1]
-                        while run:      
-                            timer.tick(fps)
-                            if counter < 19:
-                                counter+=1
-                            else:
-                                counter = 0                                        
-                            screen.fill('black')                                      
-                            if gameplay2.update_pacman_position(matrix, (player_x, player_y)):
-                                player_x, player_y = gameplay2.update_pacman_position(matrix, (player_x, player_y))
-                                score_value -= 1
-                                if score_value == 0:
-                                    run = False
-                            else:
-                                run = False
-
-                            render.render(matrix)
-                            render.render_core(300,700,score_value)
-
-                            for event in pygame.event.get():
-                                if event.type == pygame.QUIT:
-                                        run = False   
-                            pygame.display.flip()     
+                        gameplay2.play(timer, screen)
                                              
                 else:
                     pygame.draw.rect(screen, (255,150,0), (290,200,120,60)) # Darker normally
@@ -322,5 +189,3 @@ while run:
     TextRect.center = (350,310)
     screen.blit(TextSurf, TextRect)
     pygame.display.flip()
-    pygame.display.flip()
-pygame.quit()
